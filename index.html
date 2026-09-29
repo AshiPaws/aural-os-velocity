@@ -27,7 +27,7 @@
                 extend: {
                     colors: {
                         aural: {
-                            bg: '#05020a',         /* Pixel OLED Pitch Black/Purple */
+                            bg: '#05020a',
                             bgDark: '#090412',
                             card: 'rgba(12, 6, 26, 0.75)',
                             purple: '#a855f7',
@@ -38,6 +38,7 @@
                             mintBright: '#34d399',
                             gold: '#f59e0b',
                             goldBright: '#fbbf24',
+                            overload: '#ef4444'
                         }
                     },
                     fontFamily: {
@@ -63,6 +64,7 @@
             -webkit-tap-highlight-color: transparent;
             padding-top: var(--sat);
             padding-bottom: var(--sab);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .font-orbitron {
@@ -76,6 +78,7 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(168, 85, 247, 0.25);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
         }
 
         .frosted-glass-sunlight {
@@ -102,17 +105,44 @@
         }
 
         .text-glow-red {
-            text-shadow: 0 0 20px rgba(239, 68, 68, 1);
+            text-shadow: 0 0 20px rgba(239, 68, 68, 1), 0 0 35px rgba(239, 68, 68, 0.8);
         }
 
         /* Pixel Camera Cutout Padding Helper */
         .pixel-top-notch {
-            padding-top: max(12px, var(--sat));
+            padding-top: max(26px, var(--sat));
         }
 
         /* Auralis Rune Pattern */
         .rune-bg {
             background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 10 L70 30 L60 50 L50 30 Z M60 50 L60 110 M30 60 L90 60 M20 40 L40 80 M100 40 L80 80' stroke='rgba(168, 85, 247, 0.035)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='60' cy='60' r='35' stroke='rgba(6, 182, 212, 0.025)' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+        }
+
+        /* Visual Alert Strobe / Screen Overload Effects */
+        .overload-mode {
+            background-color: #1a0208 !important;
+            box-shadow: inset 0 0 90px rgba(239, 68, 68, 0.6) !important;
+        }
+
+        /* Dynamic Glitch Animation for Overload Intensity */
+        @keyframes glitch-intense {
+            0% { transform: translate(0) skew(0deg); filter: drop-shadow(2px 0 #ef4444) drop-shadow(-2px 0 #06b6d4); }
+            20% { transform: translate(-3px, 3px) skew(-3deg); filter: drop-shadow(-4px 2px #ef4444) drop-shadow(3px -2px #22d3ee); }
+            40% { transform: translate(3px, -2px) skew(2deg); filter: drop-shadow(5px -1px #ef4444) drop-shadow(-4px 3px #06b6d4); }
+            60% { transform: translate(-2px, -3px) skew(4deg); filter: drop-shadow(-3px -3px #ef4444) drop-shadow(2px 4px #22d3ee); }
+            80% { transform: translate(3px, 2px) skew(-2deg); filter: drop-shadow(4px 3px #ef4444) drop-shadow(-3px -2px #06b6d4); }
+            100% { transform: translate(0) skew(0deg); filter: drop-shadow(2px 0 #ef4444) drop-shadow(-2px 0 #06b6d4); }
+        }
+
+        .glitch-active {
+            animation: glitch-intense 0.12s infinite;
+        }
+
+        /* Speedometer Dial Face Backdrop */
+        .gauge-backdrop {
+            background: radial-gradient(circle, rgba(18, 9, 38, 0.85) 0%, rgba(9, 4, 18, 0.95) 70%, rgba(5, 2, 10, 0.98) 100%);
+            border: 2px solid rgba(168, 85, 247, 0.35);
+            box-shadow: inset 0 0 45px rgba(0, 0, 0, 0.9), 0 0 30px rgba(168, 85, 247, 0.25);
         }
 
         /* Smooth touch feedback for Pixel screen taps */
@@ -122,136 +152,112 @@
         }
     </style>
 </head>
-<body class="h-full w-full bg-aural-bg text-slate-100 flex flex-col justify-between overflow-hidden relative rune-bg">
+<body id="appBody" class="h-full w-full bg-aural-bg text-slate-100 flex flex-col justify-between overflow-hidden relative rune-bg transition-colors duration-300">
 
-    <!-- Top Header Bar -->
-    <header class="w-full px-3 pixel-top-notch z-40">
-        <div class="frosted-glass rounded-2xl px-3 h-12 flex items-center justify-between border border-aural-purple/30 gap-2">
+    <!-- Top Header Bar with Taller Padding and Right-Side 12-Hour Clock -->
+    <header class="w-full px-4 pixel-top-notch z-40">
+        <div id="headerBar" class="frosted-glass rounded-2xl px-5 py-4 flex items-center justify-between border border-aural-purple/30 gap-3">
             
-            <!-- Left: Brand, Clock, Heading -->
-            <div class="flex items-center gap-2 min-w-0">
-                <div class="w-7 h-7 rounded-lg bg-aural-purple/20 border border-aural-gold/50 text-aural-gold flex items-center justify-center shrink-0">
-                    <svg class="w-3.5 h-3.5 fill-current animate-pulse" viewBox="0 0 24 24">
+            <!-- Left: Brand & VELOCITY Badge -->
+            <div class="flex items-center gap-3 min-w-0">
+                <div id="brandLogo" class="w-10 h-10 rounded-xl bg-aural-purple/20 border border-aural-gold/50 text-aural-gold flex items-center justify-center shrink-0">
+                    <svg class="w-6 h-6 fill-current animate-pulse" viewBox="0 0 24 24">
                         <path d="M13 2L3 14h7v8l10-12h-7z"/>
                     </svg>
                 </div>
                 <div class="truncate">
-                    <div class="flex items-center gap-1.5">
-                        <span class="font-orbitron font-black text-xs tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-aural-gold via-aural-purpleBright to-aural-cyan">
-                            AURAL-OS
+                    <div class="flex items-center gap-2">
+                        <span class="font-orbitron font-black text-base sm:text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-aural-gold via-aural-purpleBright to-aural-cyan">
+                            AURAL-OS • VELOCITY
                         </span>
-                        <span class="text-[8px] px-1 rounded bg-aural-gold/20 text-aural-gold font-mono font-bold border border-aural-gold/40 uppercase">
-                            PIXEL 9
-                        </span>
-                    </div>
-                    <div class="text-[9px] text-slate-400 font-mono tracking-tight flex items-center gap-1">
-                        <span id="systemClock" class="font-bold text-aural-cyan">00:00:00</span>
-                        <span class="text-slate-600">•</span>
-                        <span id="headingText" class="text-aural-purpleBright font-bold truncate">000° N</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right: Actions -->
-            <div class="flex items-center gap-1.5 shrink-0">
-                <button id="apkExportBtn" class="h-8 px-2.5 rounded-xl bg-aural-gold/15 border border-aural-gold/40 text-aural-gold text-[10px] font-mono font-bold flex items-center gap-1 whitespace-nowrap active:scale-95 transition">
-                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                        <path d="M17.52 11.2c-.22 0-.41.1-.56.26l-1.07 1.07c-.42.42-1.09.42-1.51 0l-1.07-1.07c-.15-.16-.34-.26-.56-.26s-.41.1-.56.26l-1.07 1.07c-.42.42-1.09.42-1.51 0L8.5 11.46c-.15-.16-.34-.26-.56-.26s-.41.1-.56.26L6.31 12.53a1.07 1.07 0 0 0 0 1.51l1.07 1.07c.15.16.34.26.56.26s.41-.1.56-.26l1.07-1.07c.42-.42 1.09-.42 1.51 0l1.07 1.07c.15.16.34.26.56.26s.41-.1.56-.26l1.07-1.07c.42-.42 1.09-.42 1.51 0l1.07 1.07c.15.16.34.26.56.26s.41-.1.56-.26l1.07-1.07a1.07 1.07 0 0 0 0-1.51l-1.07-1.07c-.15-.16-.34-.26-.56-.26z"/>
-                    </svg>
-                    <span>APK</span>
-                </button>
-
-                <button id="contrastBtn" class="w-8 h-8 rounded-xl bg-black/40 border border-aural-cyan/30 text-aural-cyan flex items-center justify-center text-xs active:scale-95 transition">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1z"/>
+            <!-- Right: Larger 12-Hour System Clock & Sun Contrast Toggle -->
+            <div class="flex items-center gap-4 shrink-0">
+                <div class="text-right">
+                    <div id="systemClock" class="font-orbitron font-black text-xl sm:text-2xl text-aural-cyan text-glow-cyan tracking-wider">12:00:00 AM</div>
+                </div>
+                <button id="contrastBtn" class="w-11 h-11 rounded-xl bg-black/40 border border-aural-cyan/30 text-aural-cyan flex items-center justify-center text-base active:scale-95 transition" title="Toggle Sun High-Contrast Mode">
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1 z"/>
                     </svg>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Center Main Display: Circular Lunacurrent Gauge & Digital Speedometer -->
-    <main class="flex-1 w-full mx-auto px-4 flex flex-col items-center justify-center relative z-30">
+    <!-- Center Main Display: Circular Gauge & Digital Speedometer -->
+    <main class="flex-1 w-full mx-auto px-2 flex flex-col items-center justify-center relative z-30">
         
-        <!-- Speed Limit Warning Banner Overlay -->
-        <div id="speedLimitAlert" class="hidden absolute top-0 px-4 py-1.5 rounded-full bg-red-600/90 text-white font-orbitron text-xs font-bold tracking-widest border border-white shadow-[0_0_20px_#ef4444] animate-bounce z-50">
-            MAX SPEED ALERT
-        </div>
-
-        <!-- Lunacurrent Speedometer Canvas Container -->
-        <div class="relative w-[290px] h-[290px] sm:w-[360px] sm:h-[360px] flex items-center justify-center my-auto">
+        <!-- Speedometer Canvas Container with Dial Face Background -->
+        <div class="relative w-[320px] h-[320px] sm:w-[440px] sm:h-[440px] max-w-[92vw] max-h-[50vh] flex items-center justify-center my-auto rounded-full gauge-backdrop p-2">
             
-            <!-- 60FPS Fluid Arc Canvas -->
-            <canvas id="gaugeCanvas" width="400" height="400" class="w-full h-full relative z-10 drop-shadow-[0_0_25px_rgba(168,85,247,0.35)]"></canvas>
+            <!-- 60FPS Fluid Arc & Particle Canvas -->
+            <canvas id="gaugeCanvas" width="500" height="500" class="w-full h-full relative z-10 drop-shadow-[0_0_35px_rgba(168,85,247,0.45)]"></canvas>
 
             <!-- Center Speed Text Overlay -->
-            <div class="absolute z-20 flex flex-col items-center justify-center text-center p-4">
+            <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-2 pointer-events-none">
                 
-                <!-- Unit Switcher Button -->
-                <button id="unitToggleBtn" class="mb-1 px-4 py-1 rounded-full text-xs font-orbitron font-bold tracking-widest bg-aural-purple/20 border border-aural-purple/50 text-aural-cyan hover:bg-aural-purple/40 active:scale-95 transition shadow-[0_0_12px_rgba(6,182,212,0.3)]">
+                <!-- Unit Switcher Button with full reliable pointer-events-auto hitbox -->
+                <button id="unitToggleBtn" class="pointer-events-auto mb-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-orbitron font-bold tracking-widest bg-aural-purple/30 border border-aural-purple/60 text-aural-cyan hover:bg-aural-purple/50 active:scale-95 transition shadow-[0_0_12px_rgba(6,182,212,0.3)] z-30 cursor-pointer">
                     <span id="currentUnitText">MPH</span> ⟳
                 </button>
 
-                <!-- Huge Pixel 9 Digital Speed Display -->
-                <div id="speedDisplay" class="font-orbitron font-black text-7xl sm:text-8xl tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-aural-purpleBright text-glow-purple leading-none my-0.5">
+                <!-- Huge Digital Speed Display (Supports 0-99 in Overload) -->
+                <div id="speedDisplay" class="font-orbitron font-black text-8xl sm:text-[9.5rem] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-aural-purpleBright text-glow-purple leading-none my-0 scale-105 transition-all duration-300">
                     00
                 </div>
 
                 <!-- Sub-status / Dynamic Velocity Level -->
-                <div class="flex items-center gap-1.5 mt-1">
-                    <span class="w-2 h-2 rounded-full bg-aural-cyan animate-pulse"></span>
-                    <span id="speedSubtext" class="text-[11px] font-mono text-aural-cyan tracking-widest uppercase font-semibold">STATIONARY</span>
-                </div>
-
-                <!-- Live G-Force Acceleration & GPS Accuracy -->
-                <div class="mt-2.5 flex items-center gap-3 px-3 py-1 rounded-xl bg-black/60 border border-aural-purple/30 text-[10px] font-mono">
-                    <div>
-                        <span class="text-slate-400">ACCEL:</span>
-                        <span id="accelValue" class="text-aural-gold font-bold">+0.00 G</span>
-                    </div>
-                    <div class="border-l border-aural-purple/30 pl-2">
-                        <span class="text-slate-400">ACC:</span>
-                        <span id="gpsAccuracyText" class="text-aural-cyan font-bold">±0.0m</span>
-                    </div>
+                <div class="flex items-center gap-1.5 mt-2">
+                    <span id="statusBeacon" class="w-2.5 h-2.5 rounded-full bg-aural-cyan animate-pulse"></span>
+                    <span id="speedSubtext" class="text-xs sm:text-sm font-mono text-aural-cyan tracking-widest uppercase font-bold">STATIONARY</span>
                 </div>
             </div>
         </div>
 
+        <!-- Overload Alert Banner (Appears from 26 to 99 MPH with smooth fade-in/out transition) -->
+        <div id="speedLimitAlert" class="opacity-0 scale-95 pointer-events-none my-2 px-5 py-1.5 rounded-full bg-red-600 text-white font-orbitron text-[10px] sm:text-xs font-black tracking-widest border-2 border-white shadow-[0_0_25px_#ef4444] z-50 uppercase flex items-center justify-center gap-2 text-center transition-all duration-500 ease-in-out">
+            <span id="alertTextLabel">MAXIMUM OVERLOAD</span>
+        </div>
+
         <!-- Compact Secondary Compass Arc Bar -->
-        <div class="w-full max-w-xs frosted-glass rounded-xl px-3 py-1.5 flex items-center justify-between text-xs font-mono border border-aural-purple/20 mb-1">
+        <div id="compassBar" class="w-full max-w-sm frosted-glass rounded-xl px-4 py-2 flex items-center justify-between text-xs font-mono border border-aural-purple/20">
             <span class="text-slate-400 flex items-center gap-1">
                 <svg class="w-3.5 h-3.5 fill-aural-cyan" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg> BEARING
             </span>
-            <span id="compassHeadingFull" class="text-aural-cyan font-orbitron font-bold">000° NORTH</span>
+            <span id="compassHeadingFull" class="text-aural-cyan font-orbitron font-bold">000</span>
             <span id="latLngCompact" class="text-[10px] text-slate-400">00.00, 00.00</span>
         </div>
     </main>
 
     <!-- Bottom Ergonomic Thumb Zone: Telemetry Grid & Large Action Buttons -->
-    <footer class="w-full px-4 pb-3 pt-1 z-40 flex flex-col gap-2.5">
+    <footer class="w-full px-4 pb-4 pt-1 z-40 flex flex-col gap-3">
         
         <!-- Ride Metrics Summary Grid -->
         <div class="grid grid-cols-4 gap-2">
-            <div class="frosted-glass rounded-xl p-2 flex flex-col items-center justify-center text-center border border-aural-purple/20">
+            <div class="frosted-glass rounded-xl p-2.5 flex flex-col items-center justify-center text-center border border-aural-purple/20">
                 <span class="text-[9px] font-mono text-slate-400 uppercase">TIME</span>
                 <span id="rideTimerDisplay" class="font-orbitron font-bold text-sm sm:text-base text-white text-glow-purple">00:00</span>
             </div>
-            <div class="frosted-glass rounded-xl p-2 flex flex-col items-center justify-center text-center border border-aural-purple/20">
+            <div class="frosted-glass rounded-xl p-2.5 flex flex-col items-center justify-center text-center border border-aural-purple/20">
                 <span class="text-[9px] font-mono text-slate-400 uppercase">DIST (<span class="distUnitText">MI</span>)</span>
                 <span id="distanceDisplay" class="font-orbitron font-bold text-sm sm:text-base text-aural-cyan text-glow-cyan">0.00</span>
             </div>
-            <div class="frosted-glass rounded-xl p-2 flex flex-col items-center justify-center text-center border border-aural-purple/20">
+            <div class="frosted-glass rounded-xl p-2.5 flex flex-col items-center justify-center text-center border border-aural-purple/20">
                 <span class="text-[9px] font-mono text-slate-400 uppercase">AVG (<span class="speedUnitText">MPH</span>)</span>
                 <span id="avgSpeedDisplay" class="font-orbitron font-bold text-sm sm:text-base text-aural-mint text-glow-mint">0.0</span>
             </div>
-            <div class="frosted-glass rounded-xl p-2 flex flex-col items-center justify-center text-center border border-aural-purple/20">
+            <div class="frosted-glass rounded-xl p-2.5 flex flex-col items-center justify-center text-center border border-aural-purple/20">
                 <span class="text-[9px] font-mono text-slate-400 uppercase">MAX (<span class="speedUnitText">MPH</span>)</span>
                 <span id="maxSpeedDisplay" class="font-orbitron font-bold text-sm sm:text-base text-aural-gold text-glow-gold">0.0</span>
             </div>
         </div>
 
         <!-- Touch Controls Bar -->
-        <div class="grid grid-cols-4 gap-2">
+        <div class="grid grid-cols-3 gap-2">
             <button id="ridePlayBtn" class="py-3 rounded-2xl bg-gradient-to-r from-aural-mint to-emerald-600 font-orbitron font-bold text-xs text-black shadow-[0_0_15px_rgba(16,185,129,0.3)] touch-active flex flex-col items-center justify-center gap-0.5">
                 <span id="ridePlayIcon">▶</span>
                 <span id="ridePlayText" class="text-[9px]">START</span>
@@ -262,90 +268,29 @@
                 <span id="modeText" class="text-[9px]">GPS SENSOR</span>
             </button>
 
-            <button id="audioToggleBtn" class="py-3 rounded-2xl bg-black/50 border border-aural-gold/40 font-orbitron font-bold text-xs text-aural-gold touch-active flex flex-col items-center justify-center gap-0.5">
-                <span id="audioIcon">🔇</span>
-                <span id="audioText" class="text-[9px]">MUTED</span>
-            </button>
-
             <button id="resetStatsBtn" class="py-3 rounded-2xl bg-black/50 border border-red-500/30 font-orbitron font-bold text-xs text-red-400 touch-active flex flex-col items-center justify-center gap-0.5">
                 <span>↺</span>
                 <span class="text-[9px]">RESET</span>
             </button>
         </div>
 
-        <!-- Touch Simulator Throttle Bar -->
-        <div id="simThrottleContainer" class="hidden w-full frosted-glass rounded-2xl p-2.5 border border-aural-gold/40 flex items-center gap-3">
-            <span class="text-[10px] font-mono text-aural-gold font-bold flex items-center gap-1">
-                🎮 SIM THROTTLE
+        <!-- Touch Simulator Throttle Bar (Max 99 MPH for Testing Overload & Glitch) -->
+        <div id="simThrottleContainer" class="hidden w-full frosted-glass rounded-2xl p-3 border border-aural-gold/40 flex items-center gap-3">
+            <span class="text-[10px] font-mono text-aural-gold font-bold flex items-center gap-1 shrink-0">
+                🎮 SIM (0-99 MPH)
             </span>
-            <input id="simSpeedSlider" type="range" min="0" max="140" value="0" class="flex-1 accent-aural-gold h-2">
-            <button id="instantBrakeBtn" class="px-3 py-1.5 rounded-xl bg-red-500/30 border border-red-500/50 font-orbitron text-[10px] font-bold text-red-300 touch-active">
+            <input id="simSpeedSlider" type="range" min="0" max="99" value="0" step="0.5" class="flex-1 accent-aural-gold h-2">
+            <button id="instantBrakeBtn" class="px-3.5 py-1.5 rounded-xl bg-red-500/30 border border-red-500/50 font-orbitron text-[10px] font-bold text-red-300 touch-active shrink-0">
                 BRAKE
             </button>
         </div>
     </footer>
 
-    <!-- APK / PWA Packaging Suite Modal Overlay -->
-    <div id="exportModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="frosted-glass w-full max-w-md rounded-3xl p-5 border border-aural-gold/50 shadow-[0_0_40px_rgba(168,85,247,0.3)] flex flex-col gap-4 max-h-[90vh] overflow-y-auto text-slate-100">
-            
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between border-b border-aural-purple/30 pb-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-aural-gold/20 border border-aural-gold text-aural-gold flex items-center justify-center text-base">
-                        📱
-                    </div>
-                    <div>
-                        <h2 class="font-orbitron font-bold text-sm text-white">AURAL-OS APK EXPORTER</h2>
-                        <p class="text-[10px] font-mono text-aural-cyan">Pixel 9 & Android Build Suite</p>
-                    </div>
-                </div>
-                <button id="closeModalBtn" class="w-8 h-8 rounded-full bg-white/10 text-slate-300 flex items-center justify-center text-sm active:scale-95">
-                    ✕
-                </button>
-            </div>
-
-            <!-- Tab Navigation -->
-            <div class="grid grid-cols-3 gap-1 bg-black/40 p-1 rounded-2xl border border-aural-purple/20 text-[11px] font-orbitron font-bold text-center">
-                <button id="tabPwaBtn" class="py-2 rounded-xl bg-aural-purple/40 text-aural-cyan border border-aural-cyan/30">1. PWA (Instant)</button>
-                <button id="tabPwaBuilderBtn" class="py-2 rounded-xl text-slate-400">2. PWABuilder</button>
-                <button id="tabCapacitorBtn" class="py-2 rounded-xl text-slate-400">3. Capacitor CLI</button>
-            </div>
-
-            <!-- Tab 1: Instant PWA -->
-            <div id="tabPwaContent" class="flex flex-col gap-3 text-xs">
-                <div class="p-3 rounded-2xl bg-aural-purple/10 border border-aural-purple/30 flex items-start gap-2.5">
-                    <p class="text-[11px] text-slate-300 leading-relaxed">
-                        <strong class="text-aural-gold">Direct Installation:</strong> Tap Chrome's menu (⋮) and select <strong>"Add to Home screen"</strong> or <strong>"Create shortcut"</strong>.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Tab 2: PWABuilder -->
-            <div id="tabPwaBuilderContent" class="hidden flex-col gap-3 text-xs">
-                <p class="text-[11px] text-slate-300 leading-relaxed">
-                    Convert this app into a signed <strong class="text-aural-mint">.APK</strong> file using PWABuilder.com.
-                </p>
-            </div>
-
-            <!-- Tab 3: Capacitor CLI -->
-            <div id="tabCapacitorContent" class="hidden flex-col gap-3 text-xs">
-                <div class="relative bg-black p-3 rounded-2xl border border-aural-purple/40 font-mono text-[10px] text-aural-cyan space-y-1">
-                    <p>npm init @capacitor/app</p>
-                    <p>npm install @capacitor/android</p>
-                    <p>npx cap add android</p>
-                </div>
-            </div>
-
-            <div class="text-center pt-1 border-t border-aural-purple/20">
-                <span class="text-[9px] font-mono text-slate-400">Optimized for Pixel 9 • Android 14+ / 15+</span>
-            </div>
-        </div>
-    </div>
-
     <script>
         const KMH_TO_MPH = 0.621371;
-        const MAX_GAUGE_SPEED_KMH = 160;
+        // Gauge maximum calibrated to 25 MPH (~40.23 KM/H). Overload goes 26-99 MPH.
+        const MAX_GAUGE_SPEED_MPH = 25;
+        const MAX_GAUGE_SPEED_KMH = MAX_GAUGE_SPEED_MPH / KMH_TO_MPH;
 
         const state = {
             unit: 'MPH',
@@ -353,44 +298,28 @@
             currentSpeedKmh: 0,
             targetSpeedKmh: 0,
             maxSpeedKmh: 0,
-            speedLimitKmh: 120,
-            lastSpeedKmh: 0,
-            lastSpeedTime: Date.now(),
-            accelG: 0,
+            isOverloaded: false,
+            isMaximumOverloaded: false,
+            overloadFactor: 0,
             distanceMeters: 0,
             timerRunning: false,
             timerElapsedSeconds: 0,
             timerInterval: null,
             headingDegrees: 0,
             isGpsLocked: false,
-            gpsAccuracyMeters: 0,
-            audioEnabled: false,
-            audioCtx: null,
-            oscillator: null,
-            gainNode: null,
             sunlightMode: false,
             wakeLock: null
         };
 
-        const apkExportBtn = document.getElementById('apkExportBtn');
-        const exportModal = document.getElementById('exportModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-
-        const tabPwaBtn = document.getElementById('tabPwaBtn');
-        const tabPwaBuilderBtn = document.getElementById('tabPwaBuilderBtn');
-        const tabCapacitorBtn = document.getElementById('tabCapacitorBtn');
-
-        const tabPwaContent = document.getElementById('tabPwaContent');
-        const tabPwaBuilderContent = document.getElementById('tabPwaBuilderContent');
-        const tabCapacitorContent = document.getElementById('tabCapacitorContent');
-
+        const appBody = document.getElementById('appBody');
+        const headerBar = document.getElementById('headerBar');
         const contrastBtn = document.getElementById('contrastBtn');
         const systemClock = document.getElementById('systemClock');
-        const headingText = document.getElementById('headingText');
         const compassHeadingFull = document.getElementById('compassHeadingFull');
         const latLngCompact = document.getElementById('latLngCompact');
 
         const speedLimitAlert = document.getElementById('speedLimitAlert');
+        const alertTextLabel = document.getElementById('alertTextLabel');
         const gaugeCanvas = document.getElementById('gaugeCanvas');
         const ctx = gaugeCanvas ? gaugeCanvas.getContext('2d') : null;
 
@@ -398,8 +327,7 @@
         const currentUnitText = document.getElementById('currentUnitText');
         const speedDisplay = document.getElementById('speedDisplay');
         const speedSubtext = document.getElementById('speedSubtext');
-        const accelValue = document.getElementById('accelValue');
-        const gpsAccuracyText = document.getElementById('gpsAccuracyText');
+        const statusBeacon = document.getElementById('statusBeacon');
 
         const rideTimerDisplay = document.getElementById('rideTimerDisplay');
         const distanceDisplay = document.getElementById('distanceDisplay');
@@ -414,41 +342,10 @@
         const modeIcon = document.getElementById('modeIcon');
         const modeText = document.getElementById('modeText');
 
-        const audioToggleBtn = document.getElementById('audioToggleBtn');
-        const audioIcon = document.getElementById('audioIcon');
-        const audioText = document.getElementById('audioText');
-
         const resetStatsBtn = document.getElementById('resetStatsBtn');
         const simThrottleContainer = document.getElementById('simThrottleContainer');
         const simSpeedSlider = document.getElementById('simSpeedSlider');
         const instantBrakeBtn = document.getElementById('instantBrakeBtn');
-
-        if (apkExportBtn && exportModal && closeModalBtn) {
-            apkExportBtn.addEventListener('click', () => exportModal.classList.remove('hidden'));
-            closeModalBtn.addEventListener('click', () => exportModal.classList.add('hidden'));
-        }
-
-        function switchTab(activeBtn, activeContent) {
-            [tabPwaBtn, tabPwaBuilderBtn, tabCapacitorBtn].forEach(btn => {
-                if (btn) btn.className = 'py-2 rounded-xl text-slate-400';
-            });
-            [tabPwaContent, tabPwaBuilderContent, tabCapacitorContent].forEach(content => {
-                if (content) {
-                    content.classList.add('hidden');
-                    content.classList.remove('flex');
-                }
-            });
-
-            if (activeBtn) activeBtn.className = 'py-2 rounded-xl bg-aural-purple/40 text-aural-cyan border border-aural-cyan/30';
-            if (activeContent) {
-                activeContent.classList.remove('hidden');
-                activeContent.classList.add('flex');
-            }
-        }
-
-        if (tabPwaBtn) tabPwaBtn.addEventListener('click', () => switchTab(tabPwaBtn, tabPwaContent));
-        if (tabPwaBuilderBtn) tabPwaBuilderBtn.addEventListener('click', () => switchTab(tabPwaBuilderBtn, tabPwaBuilderContent));
-        if (tabCapacitorBtn) tabCapacitorBtn.addEventListener('click', () => switchTab(tabCapacitorBtn, tabCapacitorContent));
 
         async function requestWakeLock() {
             if ('wakeLock' in navigator) {
@@ -554,24 +451,28 @@
             });
         }
 
+        /* Particles Array for Lunacurrent Energy Animation */
         const particles = [];
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 60; i++) {
             particles.push({
                 angle: Math.random() * Math.PI * 2,
-                speed: 0.006 + Math.random() * 0.012,
-                radiusOffset: (Math.random() - 0.5) * 14,
-                size: 1.5 + Math.random() * 2,
+                speed: 0.004 + Math.random() * 0.012,
+                radiusOffset: (Math.random() - 0.5) * 28,
+                size: 1.2 + Math.random() * 2.5,
                 alpha: 0.2 + Math.random() * 0.8
             });
         }
 
+        let animationFrame = 0;
+
         function drawGauge() {
             if (!ctx || !gaugeCanvas) return;
+            animationFrame++;
             ctx.clearRect(0, 0, gaugeCanvas.width, gaugeCanvas.height);
 
             const centerX = gaugeCanvas.width / 2;
             const centerY = gaugeCanvas.height / 2;
-            const radius = 145;
+            const radius = 195;
 
             const startAngle = Math.PI * 0.75;
             const endAngle = Math.PI * 2.25;
@@ -580,35 +481,169 @@
             const speedRatio = Math.min(1, Math.max(0, state.currentSpeedKmh / MAX_GAUGE_SPEED_KMH));
             const currentArcAngle = startAngle + (totalArc * speedRatio);
 
-            // Backing Arc
+            const targetOverload = (state.isOverloaded || state.isMaximumOverloaded) ? 1 : 0;
+            state.overloadFactor += (targetOverload - state.overloadFactor) * 0.08;
+
+            // 0. Render Canvas Speedometer Dial Background
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius + 22, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(8, 4, 16, 0.75)';
+            ctx.fill();
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = (state.isOverloaded || state.isMaximumOverloaded) ? 'rgba(239, 68, 68, 0.4)' : 'rgba(168, 85, 247, 0.25)';
+            ctx.stroke();
+
+            // Inner Concentric Speedometer Grid Line
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius - 36, startAngle, endAngle);
+            ctx.strokeStyle = 'rgba(6, 182, 212, 0.15)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.restore();
+
+            // 1. Futuristic Tick Marks & Speed Numbers around Dial Rim (0 - 25 MPH)
+            const totalTicks = 25;
+            for (let i = 0; i <= totalTicks; i++) {
+                const tickAngle = startAngle + (totalArc * (i / totalTicks));
+                const isMajor = i % 5 === 0;
+                const innerR = radius - (isMajor ? 28 : 20);
+                const outerR = radius - 14;
+
+                const x1 = centerX + Math.cos(tickAngle) * innerR;
+                const y1 = centerY + Math.sin(tickAngle) * innerR;
+                const x2 = centerX + Math.cos(tickAngle) * outerR;
+                const y2 = centerY + Math.sin(tickAngle) * outerR;
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.lineWidth = isMajor ? 3 : 1.2;
+
+                if (state.isOverloaded || state.isMaximumOverloaded) {
+                    ctx.strokeStyle = 'rgba(239, 68, 68, 0.9)';
+                } else if (tickAngle <= currentArcAngle) {
+                    ctx.strokeStyle = 'rgba(34, 211, 238, 0.85)';
+                } else {
+                    ctx.strokeStyle = 'rgba(168, 85, 247, 0.2)';
+                }
+
+                ctx.stroke();
+
+                if (isMajor) {
+                    const textR = radius - 44;
+                    const tx = centerX + Math.cos(tickAngle) * textR;
+                    const ty = centerY + Math.sin(tickAngle) * textR + 4;
+                    const mphLabel = Math.round((i / totalTicks) * MAX_GAUGE_SPEED_MPH);
+
+                    ctx.font = 'bold 12px Orbitron, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = tickAngle <= currentArcAngle 
+                        ? ((state.isOverloaded || state.isMaximumOverloaded) ? '#f87171' : '#22d3ee') 
+                        : 'rgba(148, 163, 184, 0.6)';
+                    ctx.fillText(mphLabel.toString(), tx, ty);
+                }
+
+                ctx.restore();
+            }
+
+            // 2. Backing Track Arc
             ctx.save();
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-            ctx.lineWidth = 16;
-            ctx.strokeStyle = state.sunlightMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(168, 85, 247, 0.15)';
+            ctx.lineWidth = 22;
+            ctx.strokeStyle = (state.isOverloaded || state.isMaximumOverloaded)
+                ? 'rgba(239, 68, 68, 0.25)' 
+                : (state.sunlightMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(168, 85, 247, 0.15)');
             ctx.lineCap = 'round';
             ctx.stroke();
             ctx.restore();
 
-            // Active Arc
+            // 3. Active Animated Lunacurrent Arc with Faded Edges
             if (speedRatio > 0.001) {
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, radius, startAngle, currentArcAngle);
-                ctx.lineWidth = 16;
+                ctx.lineWidth = 22;
                 ctx.lineCap = 'round';
 
-                const gradient = ctx.createConicGradient(startAngle, centerX, centerY);
-                gradient.addColorStop(0, '#a855f7');
-                gradient.addColorStop(0.5, '#06b6d4');
-                gradient.addColorStop(0.85, '#10b981');
-                gradient.addColorStop(1, '#f59e0b');
+                if (state.isOverloaded || state.isMaximumOverloaded) {
+                    ctx.strokeStyle = '#ef4444';
+                    ctx.shadowColor = '#ef4444';
+                    ctx.shadowBlur = 25 + Math.sin(animationFrame * 0.2) * 10;
+                } else {
+                    const arcRatio = (currentArcAngle - startAngle) / (Math.PI * 2);
+                    const gradient = ctx.createConicGradient(startAngle, centerX, centerY);
 
-                ctx.strokeStyle = gradient;
-                ctx.shadowColor = '#06b6d4';
-                ctx.shadowBlur = 16;
+                    gradient.addColorStop(0, 'rgba(168, 85, 247, 0.0)');
+                    gradient.addColorStop(Math.min(0.15, arcRatio * 0.2), 'rgba(168, 85, 247, 0.85)');
+                    gradient.addColorStop(Math.min(0.4, arcRatio * 0.5), 'rgba(6, 182, 212, 0.95)');
+                    gradient.addColorStop(Math.min(0.7, arcRatio * 0.8), 'rgba(10, 185, 129, 0.95)');
+                    gradient.addColorStop(Math.max(0, arcRatio - 0.05), 'rgba(192, 132, 252, 0.85)');
+                    gradient.addColorStop(arcRatio, 'rgba(192, 132, 252, 0.0)');
+
+                    ctx.strokeStyle = gradient;
+                    ctx.shadowColor = speedRatio > 0.6 ? '#22d3ee' : '#a855f7';
+                    ctx.shadowBlur = 18 + Math.sin(animationFrame * 0.08) * 8;
+                }
+
                 ctx.stroke();
                 ctx.restore();
+
+                // Glowing Tip Indicator Dot
+                const tipX = centerX + Math.cos(currentArcAngle) * radius;
+                const tipY = centerY + Math.sin(currentArcAngle) * radius;
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(tipX, tipY, 13, 0, Math.PI * 2);
+                ctx.fillStyle = state.overloadFactor > 0.5 ? '#fef08a' : '#ffffff';
+                ctx.shadowColor = state.overloadFactor > 0.5 ? '#ef4444' : '#22d3ee';
+                ctx.shadowBlur = 25;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // 4. Orbiting Energy Particles (Fades in from 1 to 35 MPH, fades out at 0, speed increases with speed)
+            const speedMph = state.currentSpeedKmh * KMH_TO_MPH;
+            let particleFadeFactor = 0;
+            if (speedMph >= 1 && speedMph <= 35) {
+                particleFadeFactor = (speedMph - 1) / 34;
+            } else if (speedMph > 35) {
+                particleFadeFactor = 1;
+            }
+
+            if (particleFadeFactor > 0.001) {
+                const speedMultiplier = 0.2 + (Math.min(99, speedMph) / 20) * 8.5;
+
+                particles.forEach(p => {
+                    p.angle += p.speed * speedMultiplier;
+                    if (p.angle > Math.PI * 2) p.angle -= Math.PI * 2;
+
+                    const pRadius = radius + p.radiusOffset;
+                    const px = centerX + Math.cos(p.angle) * pRadius;
+                    const py = centerY + Math.sin(p.angle) * pRadius;
+
+                    const activeAlpha = p.alpha * particleFadeFactor;
+
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(px, py, p.size, 0, Math.PI * 2);
+                    
+                    if (state.overloadFactor > 0.1) {
+                        ctx.fillStyle = `rgba(239, 68, 68, ${activeAlpha})`;
+                        ctx.shadowColor = '#ef4444';
+                    } else {
+                        ctx.fillStyle = speedRatio > 0.5 ? `rgba(34, 211, 238, ${activeAlpha})` : `rgba(192, 132, 252, ${activeAlpha})`;
+                        ctx.shadowColor = '#06b6d4';
+                    }
+
+                    ctx.shadowBlur = 6 * particleFadeFactor;
+                    ctx.fill();
+                    ctx.restore();
+                });
             }
 
             updateSpeedUI();
@@ -622,8 +657,6 @@
                 (pos) => {
                     const c = pos.coords;
                     state.isGpsLocked = true;
-                    state.gpsAccuracyMeters = c.accuracy || 0;
-                    if (gpsAccuracyText) gpsAccuracyText.innerText = `±${state.gpsAccuracyMeters.toFixed(1)}m`;
                     if (latLngCompact) latLngCompact.innerText = `${c.latitude.toFixed(2)}, ${c.longitude.toFixed(2)}`;
 
                     if (c.speed !== null && c.speed !== undefined && !isNaN(c.speed)) {
@@ -647,9 +680,7 @@
         function updateHeading(deg) {
             const norm = (Math.round(deg) + 360) % 360;
             state.headingDegrees = norm;
-            const card = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round(norm / 45) % 8];
-            if (headingText) headingText.innerText = `${norm.toString().padStart(3, '0')}° ${card}`;
-            if (compassHeadingFull) compassHeadingFull.innerText = `${norm.toString().padStart(3, '0')}° ${card}`;
+            if (compassHeadingFull) compassHeadingFull.innerText = norm.toString().padStart(3, '0');
         }
 
         function updateSpeedUI() {
@@ -658,80 +689,167 @@
             }
 
             const activeSpeed = getSpeedInActiveUnit(state.currentSpeedKmh);
-            if (speedDisplay) speedDisplay.innerText = Math.round(activeSpeed).toString().padStart(2, '0');
+            const speedMph = state.currentSpeedKmh * KMH_TO_MPH;
+
+            // Display speed up to 99 MPH during overload
+            const displaySpeedVal = Math.min(99, Math.round(activeSpeed));
+            if (speedDisplay) speedDisplay.innerText = displaySpeedVal.toString().padStart(2, '0');
 
             if (state.currentSpeedKmh > state.maxSpeedKmh) {
                 state.maxSpeedKmh = state.currentSpeedKmh;
                 updateMaxSpeedUI();
             }
 
+            // Overload threshold active from 26 to 99 MPH
+            if (speedMph >= 26) {
+                if (!state.isOverloaded) {
+                    state.isOverloaded = true;
+                    state.isMaximumOverloaded = true;
+                    triggerVisualOverloadMode(true, true);
+                }
+            } else {
+                if (state.isOverloaded || state.isMaximumOverloaded) {
+                    state.isOverloaded = false;
+                    state.isMaximumOverloaded = false;
+                    triggerVisualOverloadMode(false, false);
+                }
+            }
+
+            if (state.isOverloaded || state.isMaximumOverloaded) {
+                const overloadAmount = Math.min(1, (speedMph - 26) / 73);
+                if (speedDisplay) {
+                    speedDisplay.classList.add('glitch-active');
+                    speedDisplay.style.transform = `scale(${1.05 + overloadAmount * 0.25}) skew(${(Math.random() - 0.5) * overloadAmount * 18}deg)`;
+                }
+            } else {
+                if (speedDisplay) {
+                    speedDisplay.classList.remove('glitch-active');
+                    speedDisplay.style.transform = 'scale(1.05)';
+                }
+            }
+
+            // Subtext update logic
             if (speedSubtext) {
-                if (activeSpeed < 1) {
+                if (state.isOverloaded) {
+                    speedSubtext.innerText = speedMph >= 60 ? 'MAXIMUM OVERLOAD' : 'OVERLOAD';
+                    speedSubtext.className = 'text-xs sm:text-sm font-orbitron text-red-500 tracking-widest uppercase font-black animate-pulse';
+                    if (statusBeacon) statusBeacon.className = 'w-2.5 h-2.5 rounded-full bg-red-500 animate-ping';
+                } else if (activeSpeed < 1) {
                     speedSubtext.innerText = 'STATIONARY';
-                } else if (activeSpeed < 30) {
+                    speedSubtext.className = 'text-xs sm:text-sm font-mono text-aural-cyan tracking-widest uppercase font-bold';
+                    if (statusBeacon) statusBeacon.className = 'w-2.5 h-2.5 rounded-full bg-aural-cyan animate-pulse';
+                } else if (activeSpeed < 10) {
                     speedSubtext.innerText = 'LOW VELOCITY';
-                } else if (activeSpeed < 75) {
+                    speedSubtext.className = 'text-xs sm:text-sm font-mono text-aural-mint tracking-widest uppercase font-bold';
+                    if (statusBeacon) statusBeacon.className = 'w-2.5 h-2.5 rounded-full bg-aural-mint animate-pulse';
+                } else if (activeSpeed < 20) {
                     speedSubtext.innerText = 'OPTIMAL VECTOR';
+                    speedSubtext.className = 'text-xs sm:text-sm font-mono text-aural-gold tracking-widest uppercase font-bold';
+                    if (statusBeacon) statusBeacon.className = 'w-2.5 h-2.5 rounded-full bg-aural-gold animate-pulse';
                 } else {
-                    speedSubtext.innerText = 'HYPER CURRENT';
+                    speedSubtext.innerText = 'MAX VELOCITY';
+                    speedSubtext.className = 'text-xs sm:text-sm font-mono text-aural-purpleBright tracking-widest uppercase font-bold';
+                    if (statusBeacon) statusBeacon.className = 'w-2.5 h-2.5 rounded-full bg-aural-purpleBright animate-pulse';
                 }
             }
         }
 
+        function triggerVisualOverloadMode(enable, isMax) {
+            if (enable) {
+                if (speedLimitAlert) {
+                    speedLimitAlert.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                    speedLimitAlert.classList.add('opacity-100', 'scale-100');
+                    if (alertTextLabel) {
+                        alertTextLabel.innerText = isMax ? 'MAXIMUM OVERLOAD' : 'OVERLOAD';
+                    }
+                }
+                if (appBody) appBody.classList.add('overload-mode');
+                if (speedDisplay) {
+                    speedDisplay.className = 'font-orbitron font-black text-8xl sm:text-[9.5rem] tracking-tighter text-red-500 text-glow-red leading-none my-0 transition-all duration-300';
+                }
+            } else {
+                if (speedLimitAlert) {
+                    speedLimitAlert.classList.remove('opacity-100', 'scale-100');
+                    speedLimitAlert.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                }
+                if (appBody) appBody.classList.remove('overload-mode');
+                if (speedDisplay) {
+                    speedDisplay.className = 'font-orbitron font-black text-8xl sm:text-[9.5rem] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-aural-purpleBright text-glow-purple leading-none my-0 scale-105 transition-all duration-300';
+                }
+            }
+        }
+
+        // GPS Sensor / Simulator Mode Toggle Handler
         if (modeToggleBtn) {
             modeToggleBtn.addEventListener('click', () => {
                 if (state.mode === 'GPS') {
                     state.mode = 'SIM';
                     if (modeIcon) modeIcon.innerText = '🎮';
-                    if (modeText) modeText.innerText = 'TOUCH SIM';
+                    if (modeText) modeText.innerText = 'SIMULATOR';
+                    modeToggleBtn.className = 'py-3 rounded-2xl bg-aural-gold/20 border border-aural-gold/50 font-orbitron font-bold text-xs text-aural-goldBright touch-active flex flex-col items-center justify-center gap-0.5 shadow-[0_0_12px_rgba(245,158,11,0.25)]';
                     if (simThrottleContainer) simThrottleContainer.classList.remove('hidden');
                 } else {
                     state.mode = 'GPS';
+                    state.targetSpeedKmh = 0;
+                    if (simSpeedSlider) simSpeedSlider.value = 0;
                     if (modeIcon) modeIcon.innerText = '🎯';
                     if (modeText) modeText.innerText = 'GPS SENSOR';
+                    modeToggleBtn.className = 'py-3 rounded-2xl bg-aural-purple/20 border border-aural-purple/40 font-orbitron font-bold text-xs text-aural-purpleBright touch-active flex flex-col items-center justify-center gap-0.5';
                     if (simThrottleContainer) simThrottleContainer.classList.add('hidden');
                 }
             });
         }
 
+        // Simulator Speed Slider Listener (Target Speed in MPH -> KM/H)
         if (simSpeedSlider) {
             simSpeedSlider.addEventListener('input', (e) => {
-                const val = parseFloat(e.target.value);
-                state.targetSpeedKmh = state.unit === 'MPH' ? val / KMH_TO_MPH : val;
+                const targetMph = parseFloat(e.target.value);
+                state.targetSpeedKmh = targetMph / KMH_TO_MPH;
             });
         }
 
+        // Instant Brake Button Listener
         if (instantBrakeBtn) {
             instantBrakeBtn.addEventListener('click', () => {
-                if (simSpeedSlider) simSpeedSlider.value = 0;
                 state.targetSpeedKmh = 0;
+                if (simSpeedSlider) simSpeedSlider.value = 0;
             });
         }
 
+        // Sun / Sunlight High-Contrast Toggle Listener
         if (contrastBtn) {
             contrastBtn.addEventListener('click', () => {
                 state.sunlightMode = !state.sunlightMode;
-                document.querySelectorAll('.frosted-glass').forEach(el => {
-                    if (state.sunlightMode) {
-                        el.classList.add('frosted-glass-sunlight');
-                    } else {
-                        el.classList.remove('frosted-glass-sunlight');
-                    }
-                });
+                if (state.sunlightMode) {
+                    if (headerBar) headerBar.classList.add('frosted-glass-sunlight');
+                    if (contrastBtn) contrastBtn.className = 'w-11 h-11 rounded-xl bg-aural-cyan text-black flex items-center justify-center text-base font-bold active:scale-95 transition shadow-[0_0_12px_#22d3ee]';
+                } else {
+                    if (headerBar) headerBar.classList.remove('frosted-glass-sunlight');
+                    if (contrastBtn) contrastBtn.className = 'w-11 h-11 rounded-xl bg-black/40 border border-aural-cyan/30 text-aural-cyan flex items-center justify-center text-base active:scale-95 transition';
+                }
             });
         }
 
-        function updateClock() {
-            if (systemClock) systemClock.innerText = new Date().toTimeString().split(' ')[0];
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+        // Real-Time 12-Hour Clock Update Loop with AM/PM
+        setInterval(() => {
+            if (systemClock) {
+                const now = new Date();
+                let hours = now.getHours();
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                const formattedHours = hours.toString().padStart(2, '0');
+                systemClock.innerText = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+            }
+        }, 1000);
 
-        window.onload = function () {
-            startTimer();
+        // Application Startup Initialization
+        window.onload = function() {
             startGpsTracking();
+            startTimer();
             drawGauge();
-            requestWakeLock();
         };
     </script>
 </body>
