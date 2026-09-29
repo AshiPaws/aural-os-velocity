@@ -11,10 +11,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#05020a">
 
+    <!-- Embedded Web App Manifest for Instant Android PWA Installation -->
+    <link rel="manifest" href='data:application/manifest+json,{"name":"AURAL-OS VELOCITY","short_name":"VELOCITY","description":"AURAL-OS Velocity HUD Speedometer","start_url":"./index.html","display":"standalone","orientation":"portrait","background_color":"#05020a","theme_color":"#05020a","icons":[{"src":"https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f250.png","sizes":"72x72","type":"image/png"},{"src":"https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f250.png","sizes":"192x192","type":"image/png"},{"src":"https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f250.png","sizes":"512x512","type":"image/png"}]}'>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts: Orbitron & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -123,23 +124,23 @@
 </head>
 <body class="h-full w-full bg-aural-bg text-slate-100 flex flex-col justify-between overflow-hidden relative rune-bg">
 
-    <!-- Top Header: System Status & Camera Punchhole Safe Zone -->
-    <header class="w-full px-3 sm:px-4 pixel-top-notch z-40">
-        <div class="frosted-glass rounded-2xl px-3 py-2 flex items-center justify-between border border-aural-purple/30 gap-2">
+    <!-- Top Header Bar -->
+    <header class="w-full px-3 pixel-top-notch z-40">
+        <div class="frosted-glass rounded-2xl px-3 h-12 flex items-center justify-between border border-aural-purple/30 gap-2">
             
-            <!-- Brand & Live Clock Section -->
+            <!-- Left: Brand, Clock, Heading -->
             <div class="flex items-center gap-2 min-w-0">
-                <div class="w-8 h-8 rounded-xl bg-aural-purple/20 border border-aural-gold/50 text-aural-gold flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(245,158,11,0.25)]">
-                    <svg class="w-4 h-4 fill-current animate-pulse" viewBox="0 0 24 24">
+                <div class="w-7 h-7 rounded-lg bg-aural-purple/20 border border-aural-gold/50 text-aural-gold flex items-center justify-center shrink-0">
+                    <svg class="w-3.5 h-3.5 fill-current animate-pulse" viewBox="0 0 24 24">
                         <path d="M13 2L3 14h7v8l10-12h-7z"/>
                     </svg>
                 </div>
                 <div class="truncate">
                     <div class="flex items-center gap-1.5">
-                        <span class="font-orbitron font-black text-xs sm:text-sm tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-aural-gold via-aural-purpleBright to-aural-cyan">
+                        <span class="font-orbitron font-black text-xs tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-aural-gold via-aural-purpleBright to-aural-cyan">
                             AURAL-OS
                         </span>
-                        <span class="text-[8px] px-1 py-0.2 rounded bg-aural-gold/20 text-aural-gold font-mono font-bold border border-aural-gold/40 uppercase">
+                        <span class="text-[8px] px-1 rounded bg-aural-gold/20 text-aural-gold font-mono font-bold border border-aural-gold/40 uppercase">
                             PIXEL 9
                         </span>
                     </div>
@@ -151,19 +152,16 @@
                 </div>
             </div>
 
-            <!-- Sleek Action Controls Row -->
+            <!-- Right: Actions -->
             <div class="flex items-center gap-1.5 shrink-0">
-                
-                <!-- APK / PWA Package Modal Trigger -->
-                <button id="apkExportBtn" class="h-8 px-2.5 rounded-xl bg-aural-gold/15 border border-aural-gold/40 text-aural-gold text-[10px] font-mono font-bold flex items-center gap-1 whitespace-nowrap active:scale-95 transition" title="Export APK / PWA">
-                    <svg class="w-3.5 h-3.5 fill-aural-mint" viewBox="0 0 24 24">
-                        <path d="M17.52 11.2c-.22 0-.41.1-.56.26l-1.07 1.07c-.42.42-1.09.42-1.51 0l-1.07-1.07c-.15-.16-.34-.26-.56-.26s-.41.1-.56.26l-1.07 1.07c-.42.42-1.09.42-1.51 0L8.5 11.46c-.15-.16-.34-.26-.56-.26s-.41.1-.56.26L6.31 12.53a1.07 1.07 0 0 0 0 1.51l1.07 1.07c.15.16.34.26.56.26s.41-.1.56-.26l1.07-1.07c.42-.42 1.09-.42 1.51 0l1.07 1.07c.15.16.34.26.56.26s.41-.1.56-.26l1.07-1.07c.42-.42 1.09-.42 1.51 0l1.07 1.07c.15.16.34.26.56.26s.41-.1.56-.26l1.07-1.07a1.07 1.07 0 0 0 0-1.51l-1.07-1.07c-.15-.16-.34-.26-.56-.26zm-5.52-9.2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                <button id="apkExportBtn" class="h-8 px-2.5 rounded-xl bg-aural-gold/15 border border-aural-gold/40 text-aural-gold text-[10px] font-mono font-bold flex items-center gap-1 whitespace-nowrap active:scale-95 transition">
+                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                        <path d="M17.52 11.2c-.22 0-.41.1-.56.26l-1.07 1.07c-.42.42-1.09.42-1.51 0l-1.07-1.07c-.15-.16-.34-.26-.56-.26s-.41.1-.56.26l-1.07 1.07c-.42.42-1.09.42-1.51 0L8.5 11.46c-.15-.16-.34-.26-.56-.26s-.41.1-.56.26L6.31 12.53a1.07 1.07 0 0 0 0 1.51l1.07 1.07c.15.16.34.26.56.26s.41-.1.56-.26l1.07-1.07c.42-.42 1.09-.42 1.51 0l1.07 1.07c.15.16.34.26.56.26s.41-.1.56-.26l1.07-1.07c.42-.42 1.09-.42 1.51 0l1.07 1.07c.15.16.34.26.56.26s.41-.1.56-.26l1.07-1.07a1.07 1.07 0 0 0 0-1.51l-1.07-1.07c-.15-.16-.34-.26-.56-.26z"/>
                     </svg>
                     <span>APK</span>
                 </button>
 
-                <!-- High Contrast Daylight Mode -->
-                <button id="contrastBtn" class="w-8 h-8 rounded-xl bg-black/40 border border-aural-cyan/30 text-aural-cyan flex items-center justify-center text-xs active:scale-95 transition" title="Toggle High Contrast Mode">
+                <button id="contrastBtn" class="w-8 h-8 rounded-xl bg-black/40 border border-aural-cyan/30 text-aural-cyan flex items-center justify-center text-xs active:scale-95 transition">
                     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
                         <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1z"/>
                     </svg>
@@ -177,7 +175,7 @@
         
         <!-- Speed Limit Warning Banner Overlay -->
         <div id="speedLimitAlert" class="hidden absolute top-0 px-4 py-1.5 rounded-full bg-red-600/90 text-white font-orbitron text-xs font-bold tracking-widest border border-white shadow-[0_0_20px_#ef4444] animate-bounce z-50">
-            <i class="fa-solid fa-triangle-exclamation mr-1"></i> MAX SPEED ALERT
+            MAX SPEED ALERT
         </div>
 
         <!-- Lunacurrent Speedometer Canvas Container -->
@@ -191,7 +189,7 @@
                 
                 <!-- Unit Switcher Button -->
                 <button id="unitToggleBtn" class="mb-1 px-4 py-1 rounded-full text-xs font-orbitron font-bold tracking-widest bg-aural-purple/20 border border-aural-purple/50 text-aural-cyan hover:bg-aural-purple/40 active:scale-95 transition shadow-[0_0_12px_rgba(6,182,212,0.3)]">
-                    <span id="currentUnitText">MPH</span> <i class="fa-solid fa-rotate text-[10px] ml-1"></i>
+                    <span id="currentUnitText">MPH</span> ⟳
                 </button>
 
                 <!-- Huge Pixel 9 Digital Speed Display -->
@@ -222,7 +220,7 @@
         <!-- Compact Secondary Compass Arc Bar -->
         <div class="w-full max-w-xs frosted-glass rounded-xl px-3 py-1.5 flex items-center justify-between text-xs font-mono border border-aural-purple/20 mb-1">
             <span class="text-slate-400 flex items-center gap-1">
-                <i class="fa-solid fa-compass text-aural-cyan"></i> BEARING
+                <svg class="w-3.5 h-3.5 fill-aural-cyan" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg> BEARING
             </span>
             <span id="compassHeadingFull" class="text-aural-cyan font-orbitron font-bold">000° NORTH</span>
             <span id="latLngCompact" class="text-[10px] text-slate-400">00.00, 00.00</span>
@@ -232,66 +230,53 @@
     <!-- Bottom Ergonomic Thumb Zone: Telemetry Grid & Large Action Buttons -->
     <footer class="w-full px-4 pb-3 pt-1 z-40 flex flex-col gap-2.5">
         
-        <!-- Ride Metrics Summary Grid (2x2 Thumb-friendly) -->
+        <!-- Ride Metrics Summary Grid -->
         <div class="grid grid-cols-4 gap-2">
-            
-            <!-- Ride Time -->
             <div class="frosted-glass rounded-xl p-2 flex flex-col items-center justify-center text-center border border-aural-purple/20">
                 <span class="text-[9px] font-mono text-slate-400 uppercase">TIME</span>
                 <span id="rideTimerDisplay" class="font-orbitron font-bold text-sm sm:text-base text-white text-glow-purple">00:00</span>
             </div>
-
-            <!-- Distance Traveled -->
             <div class="frosted-glass rounded-xl p-2 flex flex-col items-center justify-center text-center border border-aural-purple/20">
                 <span class="text-[9px] font-mono text-slate-400 uppercase">DIST (<span class="distUnitText">MI</span>)</span>
                 <span id="distanceDisplay" class="font-orbitron font-bold text-sm sm:text-base text-aural-cyan text-glow-cyan">0.00</span>
             </div>
-
-            <!-- Avg Speed -->
             <div class="frosted-glass rounded-xl p-2 flex flex-col items-center justify-center text-center border border-aural-purple/20">
                 <span class="text-[9px] font-mono text-slate-400 uppercase">AVG (<span class="speedUnitText">MPH</span>)</span>
                 <span id="avgSpeedDisplay" class="font-orbitron font-bold text-sm sm:text-base text-aural-mint text-glow-mint">0.0</span>
             </div>
-
-            <!-- Max Speed -->
             <div class="frosted-glass rounded-xl p-2 flex flex-col items-center justify-center text-center border border-aural-purple/20">
                 <span class="text-[9px] font-mono text-slate-400 uppercase">MAX (<span class="speedUnitText">MPH</span>)</span>
                 <span id="maxSpeedDisplay" class="font-orbitron font-bold text-sm sm:text-base text-aural-gold text-glow-gold">0.0</span>
             </div>
         </div>
 
-        <!-- Touch Controls Bar (Large Targets in Pixel 9 Primary Thumb Sweep Zone) -->
+        <!-- Touch Controls Bar -->
         <div class="grid grid-cols-4 gap-2">
-            
-            <!-- Start / Pause Ride -->
             <button id="ridePlayBtn" class="py-3 rounded-2xl bg-gradient-to-r from-aural-mint to-emerald-600 font-orbitron font-bold text-xs text-black shadow-[0_0_15px_rgba(16,185,129,0.3)] touch-active flex flex-col items-center justify-center gap-0.5">
-                <i id="ridePlayIcon" class="fa-solid fa-play text-sm"></i>
+                <span id="ridePlayIcon">▶</span>
                 <span id="ridePlayText" class="text-[9px]">START</span>
             </button>
 
-            <!-- Mode Switcher (GPS vs SIM Throttle) -->
             <button id="modeToggleBtn" class="py-3 rounded-2xl bg-aural-purple/20 border border-aural-purple/40 font-orbitron font-bold text-xs text-aural-purpleBright touch-active flex flex-col items-center justify-center gap-0.5">
-                <i id="modeIcon" class="fa-solid fa-location-crosshairs text-sm"></i>
+                <span id="modeIcon">🎯</span>
                 <span id="modeText" class="text-[9px]">GPS SENSOR</span>
             </button>
 
-            <!-- Audio & Speed Warning Limit Config -->
             <button id="audioToggleBtn" class="py-3 rounded-2xl bg-black/50 border border-aural-gold/40 font-orbitron font-bold text-xs text-aural-gold touch-active flex flex-col items-center justify-center gap-0.5">
-                <i id="audioIcon" class="fa-solid fa-volume-xmark text-sm"></i>
+                <span id="audioIcon">🔇</span>
                 <span id="audioText" class="text-[9px]">MUTED</span>
             </button>
 
-            <!-- Reset Ride Telemetry -->
             <button id="resetStatsBtn" class="py-3 rounded-2xl bg-black/50 border border-red-500/30 font-orbitron font-bold text-xs text-red-400 touch-active flex flex-col items-center justify-center gap-0.5">
-                <i class="fa-solid fa-rotate-left text-sm"></i>
+                <span>↺</span>
                 <span class="text-[9px]">RESET</span>
             </button>
         </div>
 
-        <!-- Interactive Touch Simulator Throttle Bar (Visible in SIM Mode or Touch Holding) -->
+        <!-- Touch Simulator Throttle Bar -->
         <div id="simThrottleContainer" class="hidden w-full frosted-glass rounded-2xl p-2.5 border border-aural-gold/40 flex items-center gap-3">
             <span class="text-[10px] font-mono text-aural-gold font-bold flex items-center gap-1">
-                <i class="fa-solid fa-gamepad"></i> SIM THROTTLE
+                🎮 SIM THROTTLE
             </span>
             <input id="simSpeedSlider" type="range" min="0" max="140" value="0" class="flex-1 accent-aural-gold h-2">
             <button id="instantBrakeBtn" class="px-3 py-1.5 rounded-xl bg-red-500/30 border border-red-500/50 font-orbitron text-[10px] font-bold text-red-300 touch-active">
@@ -308,7 +293,7 @@
             <div class="flex items-center justify-between border-b border-aural-purple/30 pb-3">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-xl bg-aural-gold/20 border border-aural-gold text-aural-gold flex items-center justify-center text-base">
-                        <i class="fa-solid fa-android"></i>
+                        📱
                     </div>
                     <div>
                         <h2 class="font-orbitron font-bold text-sm text-white">AURAL-OS APK EXPORTER</h2>
@@ -316,7 +301,7 @@
                     </div>
                 </div>
                 <button id="closeModalBtn" class="w-8 h-8 rounded-full bg-white/10 text-slate-300 flex items-center justify-center text-sm active:scale-95">
-                    <i class="fa-solid fa-xmark"></i>
+                    ✕
                 </button>
             </div>
 
@@ -327,73 +312,28 @@
                 <button id="tabCapacitorBtn" class="py-2 rounded-xl text-slate-400">3. Capacitor CLI</button>
             </div>
 
-            <!-- Tab 1: Instant PWA Home Screen Installation (Easiest) -->
+            <!-- Tab 1: Instant PWA -->
             <div id="tabPwaContent" class="flex flex-col gap-3 text-xs">
                 <div class="p-3 rounded-2xl bg-aural-purple/10 border border-aural-purple/30 flex items-start gap-2.5">
-                    <i class="fa-solid fa-circle-info text-aural-gold text-sm mt-0.5"></i>
                     <p class="text-[11px] text-slate-300 leading-relaxed">
-                        <strong class="text-aural-gold">Method 1 (Fastest & Native):</strong> You don't need a full compilation step! You can install this app directly onto your Pixel 9 as a native PWA app without a computer.
+                        <strong class="text-aural-gold">Direct Installation:</strong> Tap Chrome's menu (⋮) and select <strong>"Add to Home screen"</strong> or <strong>"Create shortcut"</strong>.
                     </p>
                 </div>
-
-                <div class="space-y-2 font-mono text-[11px]">
-                    <div class="p-2.5 rounded-xl bg-black/50 border border-slate-700 flex items-center justify-between">
-                        <span>1. Open Google Chrome on Pixel 9</span>
-                        <i class="fa-brands fa-chrome text-aural-cyan"></i>
-                    </div>
-                    <div class="p-2.5 rounded-xl bg-black/50 border border-slate-700 flex items-center justify-between">
-                        <span>2. Tap Chrome Menu (3 dots <i class="fa-solid fa-ellipsis-vertical"></i>)</span>
-                        <i class="fa-solid fa-hand-pointer text-aural-gold"></i>
-                    </div>
-                    <div class="p-2.5 rounded-xl bg-black/50 border border-slate-700 flex items-center justify-between">
-                        <span>3. Tap "Add to Home screen" or "Install app"</span>
-                        <i class="fa-solid fa-download text-aural-mint"></i>
-                    </div>
-                </div>
-
-                <button id="generatePwaManifestBtn" class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-aural-purple to-aural-cyan font-orbitron font-bold text-xs text-black shadow-[0_0_15px_rgba(6,182,212,0.4)] touch-active flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-file-arrow-down"></i>
-                    <span>DOWNLOAD PWA MANIFEST.JSON</span>
-                </button>
             </div>
 
-            <!-- Tab 2: PWABuilder No-Code APK Generation -->
+            <!-- Tab 2: PWABuilder -->
             <div id="tabPwaBuilderContent" class="hidden flex-col gap-3 text-xs">
                 <p class="text-[11px] text-slate-300 leading-relaxed">
-                    Convert this app into a signed <strong class="text-aural-mint">.APK or .AAB</strong> file using Microsoft's official free PWABuilder tool:
+                    Convert this app into a signed <strong class="text-aural-mint">.APK</strong> file using PWABuilder.com.
                 </p>
-
-                <ol class="space-y-2 text-[11px] font-mono list-decimal list-inside text-slate-300">
-                    <li class="p-2 rounded-xl bg-black/40 border border-slate-800">
-                        Host this <code class="text-aural-cyan">index.html</code> file on GitHub Pages, Netlify, or Vercel.
-                    </li>
-                    <li class="p-2 rounded-xl bg-black/40 border border-slate-800">
-                        Visit <a href="https://www.pwabuilder.com" target="_blank" class="text-aural-gold underline font-bold">PWABuilder.com</a> in your browser.
-                    </li>
-                    <li class="p-2 rounded-xl bg-black/40 border border-slate-800">
-                        Enter your hosted web URL and tap <strong>Package for Android</strong>.
-                    </li>
-                    <li class="p-2 rounded-xl bg-black/40 border border-slate-800">
-                        Download the generated <strong class="text-aural-mint">.apk</strong> file directly to your Pixel 9 and install it!
-                    </li>
-                </ol>
             </div>
 
-            <!-- Tab 3: Capacitor CLI Native Android Build Commands -->
+            <!-- Tab 3: Capacitor CLI -->
             <div id="tabCapacitorContent" class="hidden flex-col gap-3 text-xs">
-                <p class="text-[11px] text-slate-300">
-                    Use Capacitor to turn this single HTML file into a complete Android Studio project:
-                </p>
-
-                <div class="relative bg-black p-3 rounded-2xl border border-aural-purple/40 font-mono text-[10px] text-aural-cyan space-y-1 overflow-x-auto">
-                    <button id="copyCliBtn" class="absolute top-2 right-2 px-2 py-1 rounded bg-aural-purple/30 text-aural-purpleBright text-[9px]">COPY</button>
-                    <p class="text-slate-500"># 1. Initialize Capacitor project</p>
+                <div class="relative bg-black p-3 rounded-2xl border border-aural-purple/40 font-mono text-[10px] text-aural-cyan space-y-1">
                     <p>npm init @capacitor/app</p>
-                    <p class="text-slate-500"># 2. Add Android platform</p>
                     <p>npm install @capacitor/android</p>
                     <p>npx cap add android</p>
-                    <p class="text-slate-500"># 3. Copy index.html to www/ and build APK</p>
-                    <p>npx cap run android</p>
                 </div>
             </div>
 
@@ -409,7 +349,7 @@
 
         const state = {
             unit: 'MPH',
-            mode: 'GPS', // 'GPS' or 'SIM'
+            mode: 'GPS',
             currentSpeedKmh: 0,
             targetSpeedKmh: 0,
             maxSpeedKmh: 0,
@@ -445,14 +385,6 @@
         const tabCapacitorContent = document.getElementById('tabCapacitorContent');
 
         const contrastBtn = document.getElementById('contrastBtn');
-        const wakeLockBtn = document.getElementById('wakeLockBtn');
-        const wakeLockIcon = document.getElementById('wakeLockIcon');
-        const wakeLockStatusText = document.getElementById('wakeLockStatusText');
-
-        const gpsStatusBadge = document.getElementById('gpsStatusBadge');
-        const gpsDot = document.getElementById('gpsDot');
-        const gpsStatusText = document.getElementById('gpsStatusText');
-
         const systemClock = document.getElementById('systemClock');
         const headingText = document.getElementById('headingText');
         const compassHeadingFull = document.getElementById('compassHeadingFull');
@@ -518,85 +450,14 @@
         if (tabPwaBuilderBtn) tabPwaBuilderBtn.addEventListener('click', () => switchTab(tabPwaBuilderBtn, tabPwaBuilderContent));
         if (tabCapacitorBtn) tabCapacitorBtn.addEventListener('click', () => switchTab(tabCapacitorBtn, tabCapacitorContent));
 
-        // Generate PWA manifest.json download dynamically
-        const generatePwaManifestBtn = document.getElementById('generatePwaManifestBtn');
-        if (generatePwaManifestBtn) {
-            generatePwaManifestBtn.addEventListener('click', () => {
-                const manifest = {
-                    name: "AURAL-OS VELOCITY",
-                    short_name: "VELOCITY",
-                    start_url: "./index.html",
-                    display: "standalone",
-                    background_color: "#05020a",
-                    theme_color: "#05020a",
-                    orientation: "portrait",
-                    icons: [
-                        {
-                            src: "https://placehold.co/512x512/05020a/a855f7?text=AURAL",
-                            sizes: "512x512",
-                            type: "image/png"
-                        }
-                    ]
-                };
-                const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'manifest.json';
-                a.click();
-            });
-        }
-
-        // Copy Capacitor CLI commands to clipboard
-        const copyCliBtn = document.getElementById('copyCliBtn');
-        if (copyCliBtn) {
-            copyCliBtn.addEventListener('click', () => {
-                const cliText = `npm init @capacitor/app\nnpm install @capacitor/android\nnpx cap add android\nnpx cap run android`;
-                const textArea = document.createElement('textarea');
-                textArea.value = cliText;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                copyCliBtn.innerText = 'COPIED!';
-                setTimeout(() => copyCliBtn.innerText = 'COPY', 2000);
-            });
-        }
-
         async function requestWakeLock() {
             if ('wakeLock' in navigator) {
                 try {
                     state.wakeLock = await navigator.wakeLock.request('screen');
-                    if (wakeLockIcon) wakeLockIcon.className = 'fa-solid fa-lock text-[10px]';
-                    if (wakeLockStatusText) wakeLockStatusText.innerText = 'AWAKE';
-                    if (wakeLockBtn) wakeLockBtn.className = 'px-2.5 py-1 rounded-xl bg-aural-mint/20 border border-aural-mint/40 text-aural-mint text-[10px] font-mono font-bold flex items-center gap-1 touch-active';
                 } catch (err) {
                     console.warn('Wake Lock error:', err);
-                    if (wakeLockIcon) wakeLockIcon.className = 'fa-solid fa-lock-open text-[10px]';
-                    if (wakeLockStatusText) wakeLockStatusText.innerText = 'OFF';
-                    if (wakeLockBtn) wakeLockBtn.className = 'px-2.5 py-1 rounded-xl bg-black/40 border border-slate-700 text-slate-400 text-[10px] font-mono font-bold flex items-center gap-1 touch-active';
                 }
-            } else {
-                if (wakeLockStatusText) wakeLockStatusText.innerText = 'N/A';
             }
-        }
-
-        if (wakeLockBtn) {
-            wakeLockBtn.addEventListener('click', async () => {
-                if (state.wakeLock) {
-                    try {
-                        await state.wakeLock.release();
-                        state.wakeLock = null;
-                        if (wakeLockIcon) wakeLockIcon.className = 'fa-solid fa-lock-open text-[10px]';
-                        if (wakeLockStatusText) wakeLockStatusText.innerText = 'OFF';
-                        if (wakeLockBtn) wakeLockBtn.className = 'px-2.5 py-1 rounded-xl bg-black/40 border border-slate-700 text-slate-400 text-[10px] font-mono font-bold flex items-center gap-1 touch-active';
-                    } catch (e) {
-                        console.warn('Wake lock release exception:', e);
-                    }
-                } else {
-                    await requestWakeLock();
-                }
-            });
         }
 
         document.addEventListener('visibilitychange', () => {
@@ -604,67 +465,6 @@
                 requestWakeLock();
             }
         });
-
-        function initAudioEngine() {
-            try {
-                const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
-                if (!AudioCtxClass) return;
-                state.audioCtx = new AudioCtxClass();
-                
-                state.oscillator = state.audioCtx.createOscillator();
-                state.gainNode = state.audioCtx.createGain();
-                
-                state.oscillator.type = 'sawtooth';
-                state.oscillator.frequency.value = 60;
-                state.gainNode.gain.value = 0.02;
-                
-                state.oscillator.connect(state.gainNode);
-                state.gainNode.connect(state.audioCtx.destination);
-                state.oscillator.start();
-            } catch (e) {
-                console.warn('Audio Init Error:', e);
-            }
-        }
-
-        function updateAudioSynthesizer() {
-            if (!state.audioEnabled || !state.oscillator || !state.audioCtx) return;
-            const baseFreq = 60;
-            const targetFreq = baseFreq + (state.currentSpeedKmh * 2.5);
-            state.oscillator.frequency.setTargetAtTime(targetFreq, state.audioCtx.currentTime, 0.1);
-        }
-
-        let lastSpokenTime = 0;
-        function speakSpeedWarning() {
-            const now = Date.now();
-            if (now - lastSpokenTime < 5000) return;
-            if ('speechSynthesis' in window && state.audioEnabled) {
-                lastSpokenTime = now;
-                const speedVal = Math.round(getSpeedInActiveUnit(state.currentSpeedKmh));
-                const msg = new SpeechSynthesisUtterance(`Warning. Speed limit exceeded. ${speedVal} ${state.unit}`);
-                msg.rate = 1.1;
-                window.speechSynthesis.speak(msg);
-            }
-        }
-
-        function toggleAudio() {
-            if (!state.audioCtx) initAudioEngine();
-            if (state.audioCtx && state.audioCtx.state === 'suspended') state.audioCtx.resume();
-
-            state.audioEnabled = !state.audioEnabled;
-            if (state.audioEnabled) {
-                if (audioIcon) audioIcon.className = 'fa-solid fa-volume-high text-sm';
-                if (audioText) audioText.innerText = 'SOUND ON';
-                if (audioToggleBtn) audioToggleBtn.className = 'py-3 rounded-2xl bg-aural-gold/20 border border-aural-gold/60 font-orbitron font-bold text-xs text-aural-goldBright touch-active flex flex-col items-center justify-center gap-0.5';
-                if (state.gainNode) state.gainNode.gain.value = 0.03;
-            } else {
-                if (audioIcon) audioIcon.className = 'fa-solid fa-volume-xmark text-sm';
-                if (audioText) audioText.innerText = 'MUTED';
-                if (audioToggleBtn) audioToggleBtn.className = 'py-3 rounded-2xl bg-black/50 border border-aural-gold/30 font-orbitron font-bold text-xs text-aural-gold touch-active flex flex-col items-center justify-center gap-0.5';
-                if (state.gainNode) state.gainNode.gain.value = 0;
-            }
-        }
-
-        if (audioToggleBtn) audioToggleBtn.addEventListener('click', toggleAudio);
 
         function startTimer() {
             if (state.timerInterval) clearInterval(state.timerInterval);
@@ -692,12 +492,12 @@
             ridePlayBtn.addEventListener('click', () => {
                 state.timerRunning = !state.timerRunning;
                 if (state.timerRunning) {
-                    if (ridePlayIcon) ridePlayIcon.className = 'fa-solid fa-pause text-sm';
+                    if (ridePlayIcon) ridePlayIcon.innerText = '❚❚';
                     if (ridePlayText) ridePlayText.innerText = 'PAUSE';
                     ridePlayBtn.className = 'py-3 rounded-2xl bg-amber-500 font-orbitron font-bold text-xs text-black shadow-[0_0_15px_rgba(245,158,11,0.4)] touch-active flex flex-col items-center justify-center gap-0.5';
                     requestWakeLock();
                 } else {
-                    if (ridePlayIcon) ridePlayIcon.className = 'fa-solid fa-play text-sm';
+                    if (ridePlayIcon) ridePlayIcon.innerText = '▶';
                     if (ridePlayText) ridePlayText.innerText = 'RESUME';
                     ridePlayBtn.className = 'py-3 rounded-2xl bg-gradient-to-r from-aural-mint to-emerald-600 font-orbitron font-bold text-xs text-black shadow-[0_0_15px_rgba(16,185,129,0.3)] touch-active flex flex-col items-center justify-center gap-0.5';
                 }
@@ -790,30 +590,7 @@
             ctx.stroke();
             ctx.restore();
 
-            // Ticks
-            ctx.save();
-            const tickCount = 36;
-            for (let i = 0; i <= tickCount; i++) {
-                const tickAngle = startAngle + (totalArc * (i / tickCount));
-                const isMajor = i % 6 === 0;
-                const innerR = radius - (isMajor ? 20 : 12);
-                const outerR = radius - 8;
-
-                const x1 = centerX + Math.cos(tickAngle) * innerR;
-                const y1 = centerY + Math.sin(tickAngle) * innerR;
-                const x2 = centerX + Math.cos(tickAngle) * outerR;
-                const y2 = centerY + Math.sin(tickAngle) * outerR;
-
-                ctx.beginPath();
-                ctx.moveTo(x1, y1);
-                ctx.lineTo(x2, y2);
-                ctx.lineWidth = isMajor ? 2.5 : 1;
-                ctx.strokeStyle = isMajor ? '#06b6d4' : 'rgba(168, 85, 247, 0.3)';
-                ctx.stroke();
-            }
-            ctx.restore();
-
-            // Active Colored Lunacurrent Arc
+            // Active Arc
             if (speedRatio > 0.001) {
                 ctx.save();
                 ctx.beginPath();
@@ -834,62 +611,17 @@
                 ctx.restore();
             }
 
-            // Flow Particles
-            const flowMultiplier = 1 + (speedRatio * 6);
-            particles.forEach((p, idx) => {
-                p.angle += p.speed * flowMultiplier;
-                if (p.angle > endAngle) p.angle = startAngle;
-
-                if (p.angle <= currentArcAngle) {
-                    const pRadius = radius + p.radiusOffset;
-                    const px = centerX + Math.cos(p.angle) * pRadius;
-                    const py = centerY + Math.sin(p.angle) * pRadius;
-
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.arc(px, py, p.size, 0, Math.PI * 2);
-                    ctx.fillStyle = idx % 2 === 0 ? '#06b6d4' : '#c084fc';
-                    ctx.shadowColor = '#06b6d4';
-                    ctx.shadowBlur = 8;
-                    ctx.globalAlpha = p.alpha;
-                    ctx.fill();
-                    ctx.restore();
-                }
-            });
-
-            // Glowing Indicator Pulse Head
-            if (speedRatio > 0) {
-                const leadX = centerX + Math.cos(currentArcAngle) * radius;
-                const leadY = centerY + Math.sin(currentArcAngle) * radius;
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(leadX, leadY, 10, 0, Math.PI * 2);
-                ctx.fillStyle = '#ffffff';
-                ctx.shadowColor = '#f59e0b';
-                ctx.shadowBlur = 20;
-                ctx.fill();
-                ctx.restore();
-            }
-
             updateSpeedUI();
             requestAnimationFrame(drawGauge);
         }
 
         function startGpsTracking() {
-            if (!('geolocation' in navigator)) {
-                if (gpsStatusText) gpsStatusText.innerText = 'NO GPS';
-                return;
-            }
+            if (!('geolocation' in navigator)) return;
 
             navigator.geolocation.watchPosition(
                 (pos) => {
                     const c = pos.coords;
                     state.isGpsLocked = true;
-                    if (gpsStatusText) gpsStatusText.innerText = 'LOCKED';
-                    if (gpsDot) gpsDot.className = 'w-2 h-2 rounded-full bg-aural-mint animate-pulse';
-                    if (gpsStatusBadge) gpsStatusBadge.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black/50 border border-aural-mint/30 text-aural-mint text-[10px] font-mono';
-
                     state.gpsAccuracyMeters = c.accuracy || 0;
                     if (gpsAccuracyText) gpsAccuracyText.innerText = `±${state.gpsAccuracyMeters.toFixed(1)}m`;
                     if (latLngCompact) latLngCompact.innerText = `${c.latitude.toFixed(2)}, ${c.longitude.toFixed(2)}`;
@@ -907,22 +639,9 @@
                 },
                 (err) => {
                     console.warn('GPS Error:', err.message);
-                    state.isGpsLocked = false;
-                    if (gpsStatusText) gpsStatusText.innerText = 'NO LOCK';
-                    if (gpsDot) gpsDot.className = 'w-2 h-2 rounded-full bg-red-500';
-                    if (gpsStatusBadge) gpsStatusBadge.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black/50 border border-red-500/30 text-red-400 text-[10px] font-mono';
                 },
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
             );
-        }
-
-        if (window.DeviceOrientationEvent) {
-            window.addEventListener('deviceorientation', (e) => {
-                if (e.alpha !== null && state.mode === 'GPS') {
-                    const heading = 360 - e.alpha;
-                    updateHeading(heading);
-                }
-            }, true);
         }
 
         function updateHeading(deg) {
@@ -946,62 +665,30 @@
                 updateMaxSpeedUI();
             }
 
-            // Accelerometer / G-Force Calculation
-            const now = Date.now();
-            const dt = (now - state.lastSpeedTime) / 1000;
-            if (dt >= 0.2) {
-                const currMs = (state.currentSpeedKmh * 1000) / 3600;
-                const lastMs = (state.lastSpeedKmh * 1000) / 3600;
-                const accel = (currMs - lastMs) / dt;
-                state.accelG = accel / 9.80665;
-                if (accelValue) accelValue.innerText = `${state.accelG >= 0 ? '+' : ''}${state.accelG.toFixed(2)} G`;
-                state.lastSpeedKmh = state.currentSpeedKmh;
-                state.lastSpeedTime = now;
-            }
-
-            // Speed Limit Warning trigger
-            if (state.currentSpeedKmh > state.speedLimitKmh) {
-                if (speedLimitAlert) speedLimitAlert.classList.remove('hidden');
-                if (speedDisplay) speedDisplay.classList.add('text-glow-red');
-                speakSpeedWarning();
-            } else {
-                if (speedLimitAlert) speedLimitAlert.classList.add('hidden');
-                if (speedDisplay) speedDisplay.classList.remove('text-glow-red');
-            }
-
-            // Dynamic Subtext
             if (speedSubtext) {
                 if (activeSpeed < 1) {
                     speedSubtext.innerText = 'STATIONARY';
-                    speedSubtext.className = 'text-[11px] font-mono text-slate-400 tracking-widest uppercase font-semibold';
                 } else if (activeSpeed < 30) {
                     speedSubtext.innerText = 'LOW VELOCITY';
-                    speedSubtext.className = 'text-[11px] font-mono text-aural-mint tracking-widest uppercase font-semibold';
                 } else if (activeSpeed < 75) {
                     speedSubtext.innerText = 'OPTIMAL VECTOR';
-                    speedSubtext.className = 'text-[11px] font-mono text-aural-cyan tracking-widest uppercase font-semibold';
                 } else {
                     speedSubtext.innerText = 'HYPER CURRENT';
-                    speedSubtext.className = 'text-[11px] font-mono text-aural-gold tracking-widest uppercase font-semibold';
                 }
             }
-
-            updateAudioSynthesizer();
         }
 
         if (modeToggleBtn) {
             modeToggleBtn.addEventListener('click', () => {
                 if (state.mode === 'GPS') {
                     state.mode = 'SIM';
-                    if (modeIcon) modeIcon.className = 'fa-solid fa-gamepad text-sm';
+                    if (modeIcon) modeIcon.innerText = '🎮';
                     if (modeText) modeText.innerText = 'TOUCH SIM';
-                    modeToggleBtn.className = 'py-3 rounded-2xl bg-aural-gold/20 border border-aural-gold/50 font-orbitron font-bold text-xs text-aural-goldBright touch-active flex flex-col items-center justify-center gap-0.5';
                     if (simThrottleContainer) simThrottleContainer.classList.remove('hidden');
                 } else {
                     state.mode = 'GPS';
-                    if (modeIcon) modeIcon.className = 'fa-solid fa-location-crosshairs text-sm';
+                    if (modeIcon) modeIcon.innerText = '🎯';
                     if (modeText) modeText.innerText = 'GPS SENSOR';
-                    modeToggleBtn.className = 'py-3 rounded-2xl bg-aural-purple/20 border border-aural-purple/40 font-orbitron font-bold text-xs text-aural-purpleBright touch-active flex flex-col items-center justify-center gap-0.5';
                     if (simThrottleContainer) simThrottleContainer.classList.add('hidden');
                 }
             });
