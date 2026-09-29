@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AURAL-OS • VELOCITY (Pixel 9)</title>
+    <title>VELOCITY • AURAL-OS (Pixel 9)</title>
 
     <!-- Mobile Web App & PWA Meta Tags -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -12,7 +12,7 @@
     <meta name="theme-color" content="#05020a">
 
     <!-- Embedded Web App Manifest for Instant Android PWA Installation -->
-    <link rel="manifest" href='data:application/manifest+json,{"name":"AURAL-OS VELOCITY","short_name":"VELOCITY","description":"AURAL-OS Velocity HUD Speedometer","start_url":"./index.html","display":"standalone","orientation":"portrait","background_color":"#05020a","theme_color":"#05020a","icons":[{"src":"https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f250.png","sizes":"72x72","type":"image/png"},{"src":"https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f250.png","sizes":"192x192","type":"image/png"},{"src":"https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f250.png","sizes":"512x512","type":"image/png"}]}'>
+    <link rel="manifest" href='data:application/manifest+json,{"name":"VELOCITY","short_name":"VELOCITY","description":"AURAL-OS Velocity HUD Speedometer","start_url":"./index.html","display":"standalone","orientation":"portrait","background_color":"#05020a","theme_color":"#05020a","icons":[{"src":"https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f250.png","sizes":"72x72","type":"image/png"},{"src":"https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f250.png","sizes":"192x192","type":"image/png"},{"src":"https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f250.png","sizes":"512x512","type":"image/png"}]}'>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -168,7 +168,7 @@
                 <div class="truncate">
                     <div class="flex items-center gap-2">
                         <span class="font-orbitron font-black text-base sm:text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-aural-gold via-aural-purpleBright to-aural-cyan">
-                            AURAL-OS • VELOCITY
+                            VELOCITY
                         </span>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
             <!-- Right: Larger 12-Hour System Clock & Sun Contrast Toggle -->
             <div class="flex items-center gap-4 shrink-0">
                 <div class="text-right">
-                    <div id="systemClock" class="font-orbitron font-black text-xl sm:text-2xl text-aural-cyan text-glow-cyan tracking-wider">12:00:00 AM</div>
+                    <div id="systemClock" class="font-orbitron font-black text-xl sm:text-2xl text-aural-cyan text-glow-cyan tracking-wider">12:00 AM</div>
                 </div>
                 <button id="contrastBtn" class="w-11 h-11 rounded-xl bg-black/40 border border-aural-cyan/30 text-aural-cyan flex items-center justify-center text-base active:scale-95 transition" title="Toggle Sun High-Contrast Mode">
                     <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
@@ -218,9 +218,9 @@
             </div>
         </div>
 
-        <!-- Overload Alert Banner (Appears from 26 to 99 MPH with smooth fade-in/out transition) -->
-        <div id="speedLimitAlert" class="opacity-0 scale-95 pointer-events-none my-2 px-5 py-1.5 rounded-full bg-red-600 text-white font-orbitron text-[10px] sm:text-xs font-black tracking-widest border-2 border-white shadow-[0_0_25px_#ef4444] z-50 uppercase flex items-center justify-center gap-2 text-center transition-all duration-500 ease-in-out">
-            <span id="alertTextLabel">MAXIMUM OVERLOAD</span>
+        <!-- Overload Alert Banner (Appears from 60 to 99 MPH with smooth fade-in/out transition) -->
+        <div id="speedLimitAlert" class="opacity-0 transition-opacity duration-300 pointer-events-none my-2 px-5 py-1.5 rounded-full bg-red-600 text-white font-orbitron text-[10px] sm:text-xs font-black tracking-widest border-2 border-white shadow-[0_0_25px_#ef4444] z-50 uppercase flex items-center justify-center gap-2 text-center">
+            <span>MAXIMUM OVERLOAD</span>
         </div>
 
         <!-- Compact Secondary Compass Arc Bar -->
@@ -319,7 +319,6 @@
         const latLngCompact = document.getElementById('latLngCompact');
 
         const speedLimitAlert = document.getElementById('speedLimitAlert');
-        const alertTextLabel = document.getElementById('alertTextLabel');
         const gaugeCanvas = document.getElementById('gaugeCanvas');
         const ctx = gaugeCanvas ? gaugeCanvas.getContext('2d') : null;
 
@@ -606,7 +605,7 @@
                 ctx.restore();
             }
 
-            // 4. Orbiting Energy Particles (Fades in from 1 to 35 MPH, fades out at 0, speed increases with speed)
+            // 4. Orbiting Energy Particles
             const speedMph = state.currentSpeedKmh * KMH_TO_MPH;
             let particleFadeFactor = 0;
             if (speedMph >= 1 && speedMph <= 35) {
@@ -691,7 +690,6 @@
             const activeSpeed = getSpeedInActiveUnit(state.currentSpeedKmh);
             const speedMph = state.currentSpeedKmh * KMH_TO_MPH;
 
-            // Display speed up to 99 MPH during overload
             const displaySpeedVal = Math.min(99, Math.round(activeSpeed));
             if (speedDisplay) speedDisplay.innerText = displaySpeedVal.toString().padStart(2, '0');
 
@@ -700,22 +698,39 @@
                 updateMaxSpeedUI();
             }
 
-            // Overload threshold active from 26 to 99 MPH
+            // OVERLOAD active from 26 to 99 MPH
             if (speedMph >= 26) {
                 if (!state.isOverloaded) {
                     state.isOverloaded = true;
-                    state.isMaximumOverloaded = true;
-                    triggerVisualOverloadMode(true, true);
+                    triggerVisualOverloadMode(true);
                 }
             } else {
-                if (state.isOverloaded || state.isMaximumOverloaded) {
+                if (state.isOverloaded) {
                     state.isOverloaded = false;
-                    state.isMaximumOverloaded = false;
-                    triggerVisualOverloadMode(false, false);
+                    triggerVisualOverloadMode(false);
                 }
             }
 
-            if (state.isOverloaded || state.isMaximumOverloaded) {
+            // MAXIMUM OVERLOAD badge appears from 60 to 99 MPH with fade transition
+            if (speedMph >= 60) {
+                if (!state.isMaximumOverloaded) {
+                    state.isMaximumOverloaded = true;
+                    if (speedLimitAlert) {
+                        speedLimitAlert.classList.remove('opacity-0');
+                        speedLimitAlert.classList.add('opacity-100');
+                    }
+                }
+            } else {
+                if (state.isMaximumOverloaded) {
+                    state.isMaximumOverloaded = false;
+                    if (speedLimitAlert) {
+                        speedLimitAlert.classList.remove('opacity-100');
+                        speedLimitAlert.classList.add('opacity-0');
+                    }
+                }
+            }
+
+            if (state.isOverloaded) {
                 const overloadAmount = Math.min(1, (speedMph - 26) / 73);
                 if (speedDisplay) {
                     speedDisplay.classList.add('glitch-active');
@@ -731,7 +746,7 @@
             // Subtext update logic
             if (speedSubtext) {
                 if (state.isOverloaded) {
-                    speedSubtext.innerText = speedMph >= 60 ? 'MAXIMUM OVERLOAD' : 'OVERLOAD';
+                    speedSubtext.innerText = 'OVERLOAD';
                     speedSubtext.className = 'text-xs sm:text-sm font-orbitron text-red-500 tracking-widest uppercase font-black animate-pulse';
                     if (statusBeacon) statusBeacon.className = 'w-2.5 h-2.5 rounded-full bg-red-500 animate-ping';
                 } else if (activeSpeed < 1) {
@@ -754,24 +769,13 @@
             }
         }
 
-        function triggerVisualOverloadMode(enable, isMax) {
+        function triggerVisualOverloadMode(enable) {
             if (enable) {
-                if (speedLimitAlert) {
-                    speedLimitAlert.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-                    speedLimitAlert.classList.add('opacity-100', 'scale-100');
-                    if (alertTextLabel) {
-                        alertTextLabel.innerText = isMax ? 'MAXIMUM OVERLOAD' : 'OVERLOAD';
-                    }
-                }
                 if (appBody) appBody.classList.add('overload-mode');
                 if (speedDisplay) {
                     speedDisplay.className = 'font-orbitron font-black text-8xl sm:text-[9.5rem] tracking-tighter text-red-500 text-glow-red leading-none my-0 transition-all duration-300';
                 }
             } else {
-                if (speedLimitAlert) {
-                    speedLimitAlert.classList.remove('opacity-100', 'scale-100');
-                    speedLimitAlert.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                }
                 if (appBody) appBody.classList.remove('overload-mode');
                 if (speedDisplay) {
                     speedDisplay.className = 'font-orbitron font-black text-8xl sm:text-[9.5rem] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-aural-purpleBright text-glow-purple leading-none my-0 scale-105 transition-all duration-300';
@@ -830,18 +834,17 @@
             });
         }
 
-        // Real-Time 12-Hour Clock Update Loop with AM/PM
+        // Real-Time 12-Hour Clock Update Loop (No Seconds)
         setInterval(() => {
             if (systemClock) {
                 const now = new Date();
                 let hours = now.getHours();
                 const minutes = now.getMinutes().toString().padStart(2, '0');
-                const seconds = now.getSeconds().toString().padStart(2, '0');
                 const ampm = hours >= 12 ? 'PM' : 'AM';
                 hours = hours % 12;
                 hours = hours ? hours : 12;
                 const formattedHours = hours.toString().padStart(2, '0');
-                systemClock.innerText = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+                systemClock.innerText = `${formattedHours}:${minutes} ${ampm}`;
             }
         }, 1000);
 
